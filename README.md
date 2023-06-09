@@ -318,9 +318,17 @@ test_database=#
 ## Задача 4
 
 Используя утилиту `pg_dump`, создайте бекап БД `test_database`.
+```
+oot@c4e70a7c04cb:/# pg_dump -U postgres test_database -f /tmp/test_database_back.sql
+root@c4e70a7c04cb:/# ls /tmp
+test_database_back.sql	test_dump.sql
+root@c4e70a7c04cb:/# 
+```
 
 Как бы вы доработали бэкап-файл, чтобы добавить уникальность значения столбца `title` для таблиц `test_database`?
-
+```
+title character varying(80) NOT NULL UNIQUE,
+```
 ---
 
 ### Как cдавать задание

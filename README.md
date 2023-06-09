@@ -207,6 +207,78 @@ root@c4e70a7c04cb:/#
 с наибольшим средним значением размера элементов в байтах.
 
 **Приведите в ответе** команду, которую вы использовали для вычисления, и полученный результат.
+```
+yaha@yahawork:~/postgres$ docker cp ./test_dump.sql postgresql:/tmp
+yaha@yahawork:~/postgres$ docker exec -it postgresql bash
+root@c4e70a7c04cb:/# ls /tmp
+test_dump.sql
+root@c4e70a7c04cb:/# 
+root@c4e70a7c04cb:/# psql -U postgres
+psql (13.11 (Debian 13.11-1.pgdg110+1))
+Type "help" for help.
+
+postgres=# CREATE DATABASE test_database;
+CREATE DATABASE
+postgres=# \q
+root@c4e70a7c04cb:/# psql -U postgres -f /tmp/test_dump.sql test_database
+SET
+SET
+SET
+SET
+SET
+ set_config 
+------------
+ 
+(1 row)
+
+SET
+SET
+SET
+SET
+SET
+SET
+CREATE TABLE
+ALTER TABLE
+CREATE SEQUENCE
+ALTER TABLE
+ALTER SEQUENCE
+ALTER TABLE
+COPY 8
+ setval 
+--------
+      8
+(1 row)
+
+ALTER TABLE
+root@c4e70a7c04cb:/# 
+root@c4e70a7c04cb:/# psql -U postgres
+psql (13.11 (Debian 13.11-1.pgdg110+1))
+Type "help" for help.
+
+postgres=# \connect test_database
+You are now connected to database "test_database" as user "postgres".
+test_database=# 
+test_database-# \dt
+         List of relations
+ Schema |  Name  | Type  |  Owner   
+--------+--------+-------+----------
+ public | orders | table | postgres
+(1 row)
+
+test_database=# ANALYZE VERBOSE public.orders;
+INFO:  analyzing "public.orders"
+INFO:  "orders": scanned 1 of 1 pages, containing 8 live rows and 0 dead rows; 8 rows in sample, 8 estimated total rows
+ANALYZE
+test_database=# select avg_width from pg_stats where tablename='orders';
+ avg_width 
+-----------
+         4
+        16
+         4
+(3 rows)
+
+test_database=# 
+```
 
 ## Задача 3
 

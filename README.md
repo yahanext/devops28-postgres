@@ -265,7 +265,7 @@ test_database-# \dt
  public | orders | table | postgres
 (1 row)
 
-test_database=# ANALYZE VERBOSE public.orders;
+test_database=# analyze verbose public.orders;
 INFO:  analyzing "public.orders"
 INFO:  "orders": scanned 1 of 1 pages, containing 8 live rows and 0 dead rows; 8 rows in sample, 8 estimated total rows
 ANALYZE
@@ -287,8 +287,33 @@ test_database=#
 провести разбиение таблицы на 2: шардировать на orders_1 - price>499 и orders_2 - price<=499.
 
 Предложите SQL-транзакцию для проведения этой операции.
+```
+test_database=# create table orders1 (check (price > 499)) inherits (orders);
+CREATE TABLE
+test_database=# insert into orders1 select * from orders where price > 499;
+INSERT 0 3
+test_database=# create table orders2 (check (price <= 499)) inherits (orders);
+CREATE TABLE
+test_database=# insert into orders2 select * from orders where price <= 499;
+INSERT 0 5
+test_database=# delete from only orders;
+DELETE 8
+test_database-# \dt
+          List of relations
+ Schema |  Name   | Type  |  Owner   
+--------+---------+-------+----------
+ public | orders  | table | postgres
+ public | orders1 | table | postgres
+ public | orders2 | table | postgres
+(3 rows)
+
+test_database=# 
+```
 
 Можно ли было изначально исключить ручное разбиение при проектировании таблицы orders?
+```
+использовать Table Partitioning
+```
 
 ## Задача 4
 
